@@ -3,7 +3,6 @@ from math import sqrt
 
 from keras.models import Sequential
 from keras.layers import Embedding, Bidirectional, LSTM, Dense
-from keras.losses import mae
 from keras import regularizers
 
 from sklearn.model_selection import train_test_split
@@ -29,9 +28,9 @@ nets = Sequential([
               mask_zero=True,
               trainable=False),
     Bidirectional(LSTM(20, activation='relu', dropout=0.5)),
-    Dense(1, activation='sigmoid', kernel_regularizer=regularizers.l2(0.01))
+    Dense(1, activation='sigmoid', kernel_regularizer=regularizers.l2(0.0001))
 ])
-nets.compile(optimizer='adam', loss=mae, metrics=['mse', 'mae'])
+nets.compile(optimizer='adam', loss='mse', metrics=['mse', 'mae'])
 nets.fit(train_X, train_y, epochs=2, batch_size=64,
          validation_data=(valid_X, valid_y), verbose=1)
 

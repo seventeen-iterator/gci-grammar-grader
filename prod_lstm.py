@@ -1,7 +1,6 @@
 import pickle
 from keras.models import Sequential
 from keras.layers import Embedding, Bidirectional, LSTM, Dense
-from keras.losses import mae
 from keras import regularizers
 
 from util import preprocess_texts, Predictor, MAX_SEQUENCE_LENGTH
@@ -20,10 +19,10 @@ nets = Sequential([
               mask_zero=True,
               trainable=False),
     Bidirectional(LSTM(20, activation='relu', dropout=0.5)),
-    Dense(1, activation='sigmoid', kernel_regularizer=regularizers.l2(0.01))
+    Dense(1, activation='sigmoid', kernel_regularizer=regularizers.l2(0.0001))
 ])
-nets.compile(optimizer='adam', loss=mae, metrics=['mse', 'mae'])
-nets.fit(set_x, set_y, epochs=10, batch_size=32, verbose=0)
+nets.compile(optimizer='adam', loss='mse', metrics=['mse', 'mae'])
+nets.fit(set_x, set_y, epochs=5, batch_size=32, verbose=1)
 
 print("Prediction on correct sentence: ", nets.predict(
     preprocess_texts(["Computers are the best."], model)) * 5)
